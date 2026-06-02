@@ -89,11 +89,10 @@ export default function AboutSection() {
             
             {/* Image backing block */}
             <div className="relative overflow-hidden bg-[#111111] max-w-[380px] mx-auto border border-[#D4AF37]/25 rounded shadow-2xl z-10">
-              <div className="absolute inset-0 bg-[#7A0000]/5 mix-blend-color" />
               <img
                 src={`${import.meta.env.BASE_URL}assets/IMG_2235.jpg`}
                 alt="Ananda Poet Portrait"
-                className="w-full h-[460px] object-cover filter grayscale contrast-110 hover:grayscale-0 transition-all duration-700 scale-100 hover:scale-103 select-none"
+                className="w-full h-[460px] object-cover transition-all duration-700 scale-100 hover:scale-103 select-none"
               />
               
               <div className="absolute bottom-6 left-6 right-6 bg-[#050505]/95 border border-[#D4AF37]/30 p-3 z-20 whitespace-normal text-left">

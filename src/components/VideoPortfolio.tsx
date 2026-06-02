@@ -140,86 +140,88 @@ export default function VideoPortfolio() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#050505]/99 backdrop-blur-lg p-6"
+            className="fixed inset-0 z-50 overflow-y-auto bg-[#050505]/99 backdrop-blur-lg flex flex-col justify-start md:justify-center items-center"
           >
             {/* Ambient projection lights */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#7A0000]/15 w-[600px] h-[600px] blur-[150px] pointer-events-none" />
 
-            <div className="relative max-w-4xl w-full flex flex-col justify-center items-center space-y-6 z-30 select-none">
-              
-              {/* Theater Frame Headers */}
-              <div className="w-full flex items-center justify-between border-b border-white/10 pb-4 font-mono text-[9.5px]">
-                <span className="flex items-center gap-2 text-[#D4AF37]">
-                  <Tv className="h-4 w-4" /> CAMPAIGN PROJECTOR ACT_IV
-                </span>
-                <span className="text-white/40">ANANDAPOET CINEMATIC BRAND REEL</span>
-                <button
-                  onClick={() => setActiveTheaterVideo(null)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white/70 hover:text-white hover:border-[#D4AF37] transition-all"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-
-              {/* Virtual Screen projecting high fashion slides */}
-              <div className="relative w-full aspect-video border-[12px] border-[#111111] bg-[#000] overflow-hidden shadow-[0_0_100px_rgba(122,0,0,0.3)] flex justify-center items-center">
+            <div className="min-h-full w-full flex items-center justify-center py-16 md:py-4 px-2 md:px-8">
+              <div className="relative max-w-4xl w-full flex flex-col justify-center items-center space-y-6 z-30 select-none">
                 
-                {/* Horizontal scanner beam overlay scanlines */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,3px_100%] z-20 pointer-events-none" />
-                
-                {/* Visual projection filter glow */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#7A0000]/10 via-transparent to-[#D4AF37]/5 z-10 pointer-events-none" />
-
-                {/* Animated Simulated film frames panning on a custom scheduler */}
-                <motion.div
-                  key={cinematicBeat}
-                  initial={{ opacity: 0, scale: 1.05 }}
-                  animate={{ opacity: 0.9, scale: 1.15 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 4.8, ease: 'easeOut' }}
-                  className="absolute inset-0"
-                >
-                  <img
-                    src={activeTheaterVideo.thumbnailUrl}
-                    alt={activeTheaterVideo.title}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover filter grayscale contrast-150 brightness-75 animate-[cinematicMotion_20s_infinite_linear]"
-                  />
-                </motion.div>
-
-                {/* Sound indicator layer */}
-                <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 bg-[#050505]/70 border border-[#D4AF37]/20 px-2.5 py-1 rounded text-[#D4AF37] text-[8px] font-mono">
-                  <Volume2 className="h-3 w-3 animate-pulse" />
-                  <span>SIMULATED STEREO AUDIO ACTIVE</span>
+                {/* Theater Frame Headers */}
+                <div className="w-full flex items-center justify-between border-b border-white/10 pb-4 font-mono text-[9.5px]">
+                  <span className="flex items-center gap-2 text-[#D4AF37]">
+                    <Tv className="h-4 w-4" /> CAMPAIGN PROJECTOR ACT_IV
+                  </span>
+                  <span className="text-white/40">ANANDAPOET CINEMATIC BRAND REEL</span>
+                  <button
+                    onClick={() => setActiveTheaterVideo(null)}
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white/70 hover:text-white hover:border-[#D4AF37] transition-all"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
                 </div>
 
-                {/* Cinematic Subtitle Box centered inside projector screen */}
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 max-w-xl text-center select-none bg-[#050505]/85 border border-[#D4AF37]/20 px-5 py-2.5 rounded-sm">
-                  <p className="font-mono text-[9px] sm:text-[10px] tracking-wide text-[#F8F5EE] leading-normal uppercase">
-                    {mockSubtitles[cinematicBeat]}
-                  </p>
+                {/* Virtual Screen projecting high fashion slides */}
+                <div className="relative w-full aspect-video border-[12px] border-[#111111] bg-[#000] overflow-hidden shadow-[0_0_100px_rgba(122,0,0,0.3)] flex justify-center items-center">
+                  
+                  {/* Horizontal scanner beam overlay scanlines */}
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,3px_100%] z-20 pointer-events-none" />
+                  
+                  {/* Visual projection filter glow */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#7A0000]/10 via-transparent to-[#D4AF37]/5 z-10 pointer-events-none" />
+
+                  {/* Animated Simulated film frames panning on a custom scheduler */}
+                  <motion.div
+                    key={cinematicBeat}
+                    initial={{ opacity: 0, scale: 1.05 }}
+                    animate={{ opacity: 0.9, scale: 1.15 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 4.8, ease: 'easeOut' }}
+                    className="absolute inset-0"
+                  >
+                    <img
+                      src={activeTheaterVideo.thumbnailUrl}
+                      alt={activeTheaterVideo.title}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover filter grayscale contrast-150 brightness-75 animate-[cinematicMotion_20s_infinite_linear]"
+                    />
+                  </motion.div>
+
+                  {/* Sound indicator layer */}
+                  <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 bg-[#050505]/70 border border-[#D4AF37]/20 px-2.5 py-1 rounded text-[#D4AF37] text-[8px] font-mono">
+                    <Volume2 className="h-3 w-3 animate-pulse" />
+                    <span>SIMULATED STEREO AUDIO ACTIVE</span>
+                  </div>
+
+                  {/* Cinematic Subtitle Box centered inside projector screen */}
+                  <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 max-w-xl text-center select-none bg-[#050505]/85 border border-[#D4AF37]/20 px-5 py-2.5 rounded-sm">
+                    <p className="font-mono text-[9px] sm:text-[10px] tracking-wide text-[#F8F5EE] leading-normal uppercase">
+                      {mockSubtitles[cinematicBeat]}
+                    </p>
+                  </div>
+
+                  {/* Vignette letterboxing border */}
+                  <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.95)] z-20 pointer-events-none" />
                 </div>
 
-                {/* Vignette letterboxing border */}
-                <div className="absolute inset-0 shadow-[inset_0_0_80px_rgba(0,0,0,0.95)] z-20 pointer-events-none" />
+                {/* Theater metadata stats */}
+                <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 text-left py-4 border-t border-white/10">
+                  <div className="space-y-1 font-mono text-[10px]">
+                    <span className="text-white/40 block">CAMPAIGN TITLE</span>
+                    <span className="text-white uppercase font-bold text-xs">{activeTheaterVideo.title}</span>
+                  </div>
+                  <div className="space-y-1 font-mono text-[10px]">
+                    <span className="text-white/40 block">DIRECT DETAILS</span>
+                    <span className="text-[#D4AF37] text-[10.5px] block">{activeTheaterVideo.description}</span>
+                  </div>
+                  <div className="space-y-1 font-mono text-[10px]">
+                    <span className="text-white/40 block">SPECIFICATIONS</span>
+                    <span className="text-white uppercase text-xs">FORMAT: 2.39:1 CINEMASCOPE</span>
+                  </div>
+                </div>
+
               </div>
-
-              {/* Theater metadata stats */}
-              <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 text-left py-4 border-t border-white/10">
-                <div className="space-y-1 font-mono text-[10px]">
-                  <span className="text-white/40 block">CAMPAIGN TITLE</span>
-                  <span className="text-white uppercase font-bold text-xs">{activeTheaterVideo.title}</span>
-                </div>
-                <div className="space-y-1 font-mono text-[10px]">
-                  <span className="text-white/40 block">DIRECT DETAILS</span>
-                  <span className="text-[#D4AF37] text-[10.5px] block">{activeTheaterVideo.description}</span>
-                </div>
-                <div className="space-y-1 font-mono text-[10px]">
-                  <span className="text-white/40 block">SPECIFICATIONS</span>
-                  <span className="text-white uppercase text-xs">FORMAT: 2.39:1 CINEMASCOPE</span>
-                </div>
-              </div>
-
             </div>
           </motion.div>
         )}

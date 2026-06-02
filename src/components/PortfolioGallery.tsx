@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Filter, Eye, X, ChevronLeft, ChevronRight, Maximize2, Sparkles } from 'lucide-react';
 import { PORTFOLIO_IMAGES } from '../data/portfolioData';
@@ -56,8 +56,8 @@ function GalleryCard({
       onClick={() => openViewer(photo, index)}
     >
       {/* Photo Overlay hover effects */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-[#050505]/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      <div className="absolute top-4 right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#050505]/80 border border-[#D4AF37]/30 text-[#D4AF37] opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-300">
+      <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-[#050505]/0 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute top-4 right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#050505]/80 border border-[#D4AF37]/30 text-[#D4AF37] opacity-100 scale-100 md:opacity-0 md:scale-90 md:group-hover:opacity-100 md:group-hover:scale-100 transition-all duration-300">
         <Maximize2 className="h-3.5 w-3.5" />
       </div>
 
@@ -80,7 +80,7 @@ function GalleryCard({
       />
 
       {/* Photographic Metadata Slate */}
-      <div className="absolute bottom-0 inset-x-0 z-20 p-5 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 select-none bg-gradient-to-t from-[#050505] via-[#050505]/95 to-transparent">
+      <div className="absolute bottom-0 inset-x-0 z-20 p-5 translate-y-0 opacity-100 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-300 select-none bg-gradient-to-t from-[#050505] via-[#050505]/95 to-transparent">
         <div className="flex items-center justify-between">
           <span className="font-mono text-[8px] uppercase tracking-widest text-[#D4AF37]">
             {photo.category}
@@ -102,6 +102,32 @@ export default function PortfolioGallery() {
   const [activePhoto, setActivePhoto] = useState<PortfolioImage | null>(null);
   const [activePhotoIndex, setActivePhotoIndex] = useState<number>(-1);
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const diffX = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (diffX > minSwipeDistance) {
+      navigatePhoto(1); // Swipe left -> Next
+    } else if (diffX < -minSwipeDistance) {
+      navigatePhoto(-1); // Swipe right -> Prev
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
 
   // All portfolio images are shown without category filters
   const filteredImages = PORTFOLIO_IMAGES;
@@ -237,7 +263,10 @@ export default function PortfolioGallery() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#050505]/98 backdrop-blur-md p-4"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            className="fixed inset-0 z-50 overflow-y-auto bg-[#050505]/98 backdrop-blur-md flex flex-col justify-start md:justify-center items-center"
           >
             {/* Ambient backstage gold glow under viewer */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-[#7A0000]/15 blur-[120px] pointer-events-none" />
@@ -254,7 +283,7 @@ export default function PortfolioGallery() {
             {/* Left Nav */}
             <button
               onClick={() => navigatePhoto(-1)}
-              className="absolute left-6 top-1/2 -translate-y-1/2 z-40 flex h-14 w-11 items-center justify-center bg-black/40 hover:bg-black text-[#D4AF37] border-y border-r border-[#D4AF37]/20 hover:border-[#D4AF37] transition-all"
+              className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 z-40 flex h-10 w-8 md:h-14 md:w-11 items-center justify-center bg-black/40 hover:bg-black text-[#D4AF37] border-y border-r border-[#D4AF37]/20 hover:border-[#D4AF37] transition-all"
               title="Previous Photo [←]"
             >
               <ChevronLeft className="h-6 w-6" />
@@ -263,77 +292,80 @@ export default function PortfolioGallery() {
             {/* Right Nav */}
             <button
               onClick={() => navigatePhoto(1)}
-              className="absolute right-6 top-1/2 -translate-y-1/2 z-40 flex h-14 w-11 items-center justify-center bg-black/40 hover:bg-black text-[#D4AF37] border-y border-l border-[#D4AF37]/20 hover:border-[#D4AF37] transition-all"
+              className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 z-40 flex h-10 w-8 md:h-14 md:w-11 items-center justify-center bg-black/40 hover:bg-black text-[#D4AF37] border-y border-l border-[#D4AF37]/20 hover:border-[#D4AF37] transition-all"
               title="Next Photo [→]"
             >
               <ChevronRight className="h-6 w-6" />
             </button>
 
-            {/* Media Canvas Area */}
-            <div className="relative max-w-5xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 z-30 select-none">
-              
-              {/* Actual Image Frame */}
-              <div className="md:col-span-8 flex justify-center items-center h-[55vh] md:h-[75vh] relative group border border-[#D4AF37]/10 bg-[#111111]/40 rounded p-2">
-                {/* Gold Frame accent shadows */}
-                <div className="absolute inset-0 border border-[#D4AF37]/5 pointer-events-none" />
-                <motion.img
-                  key={activePhoto.imageUrl}
-                  src={activePhoto.imageUrl}
-                  alt={activePhoto.title}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4 }}
-                  referrerPolicy="no-referrer"
-                  className="max-h-full max-w-full object-contain shadow-2xl filter contrast-110 select-none"
-                />
-              </div>
+            {/* Scrollable inner wrapper for centering and vertical flow */}
+            <div className="min-h-full w-full flex items-center justify-center py-16 md:py-4 px-2 md:px-8">
+              {/* Media Canvas Area */}
+              <div className="relative max-w-5xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 z-30 select-none">
+                
+                {/* Actual Image Frame */}
+                <div className="md:col-span-8 flex justify-center items-center h-[40vh] sm:h-[55vh] md:h-[75vh] relative group border border-[#D4AF37]/10 bg-[#111111]/40 rounded p-2">
+                  {/* Gold Frame accent shadows */}
+                  <div className="absolute inset-0 border border-[#D4AF37]/5 pointer-events-none" />
+                  <motion.img
+                    key={activePhoto.imageUrl}
+                    src={activePhoto.imageUrl}
+                    alt={activePhoto.title}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4 }}
+                    referrerPolicy="no-referrer"
+                    className="max-h-full max-w-full object-contain shadow-2xl filter contrast-110 select-none"
+                  />
+                </div>
 
-              {/* High Fashion Spec Sheet Metadata */}
-              <div className="md:col-span-4 flex flex-col justify-between py-2 text-left space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                    <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#D4AF37]">
-                      {activePhoto.category}
-                    </span>
-                    <span className="font-mono text-[10px] text-[#F8F5EE]/40 bg-[#111111] px-2 py-0.5 rounded border border-white/5">
-                      EXHIBIT {activePhotoIndex + 1}/{filteredImages.length}
-                    </span>
-                  </div>
+                {/* High Fashion Spec Sheet Metadata */}
+                <div className="md:col-span-4 flex flex-col justify-between py-2 text-left space-y-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                      <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-[#D4AF37]">
+                        {activePhoto.category}
+                      </span>
+                      <span className="font-mono text-[10px] text-[#F8F5EE]/40 bg-[#111111] px-2 py-0.5 rounded border border-white/5">
+                        EXHIBIT {activePhotoIndex + 1}/{filteredImages.length}
+                      </span>
+                    </div>
 
-                  <div className="space-y-2">
-                    <h2 className="font-serif text-2xl md:text-3xl font-bold tracking-widest text-[#F8F5EE]">
-                      {activePhoto.title}
-                    </h2>
-                    <p className="font-mono text-[10px] text-[#D4AF37] uppercase tracking-[0.2em]">
-                      RELEASE YEAR: {activePhoto.year}
+                    <div className="space-y-2">
+                      <h2 className="font-serif text-2xl md:text-3xl font-bold tracking-widest text-[#F8F5EE]">
+                        {activePhoto.title}
+                      </h2>
+                      <p className="font-mono text-[10px] text-[#D4AF37] uppercase tracking-[0.2em]">
+                        RELEASE YEAR: {activePhoto.year}
+                      </p>
+                    </div>
+
+                    <p className="text-xs text-[#F8F5EE]/70 font-light leading-relaxed">
+                      {activePhoto.description}
                     </p>
                   </div>
 
-                  <p className="text-xs text-[#F8F5EE]/70 font-light leading-relaxed">
-                    {activePhoto.description}
-                  </p>
+                  <div className="space-y-4 bg-[#111111]/80 border border-[#D4AF37]/15 p-5 rounded">
+                    <div className="flex justify-between items-center text-[10px] font-mono">
+                      <span className="text-[#F8F5EE]/40 uppercase tracking-widest">GALLERY EXHIBIT</span>
+                      <span className="text-[#F8F5EE] uppercase">ANANDAPOET</span>
+                    </div>
+                    <div className="h-[1px] bg-white/5" />
+                    <div className="flex justify-between items-center text-[10px] font-mono">
+                      <span className="text-[#F8F5EE]/40 uppercase tracking-widest">ARTWORK TYPE</span>
+                      <span className="text-[#D4AF37] uppercase font-bold">{activePhoto.category} PHOTOGRAPHY</span>
+                    </div>
+                  </div>
+
+                  {/* Keyboard Controls footer Helper */}
+                  <div className="hidden md:flex items-center justify-between text-[9px] font-mono text-[#F8F5EE]/25 bg-[#050505] p-2 border border-white/5 rounded">
+                    <span>← PREVIOUS PHOTO</span>
+                    <span>ESC TO CLOSE</span>
+                    <span>NEXT PHOTO →</span>
+                  </div>
                 </div>
 
-                <div className="space-y-4 bg-[#111111]/80 border border-[#D4AF37]/15 p-5 rounded">
-                  <div className="flex justify-between items-center text-[10px] font-mono">
-                    <span className="text-[#F8F5EE]/40 uppercase tracking-widest">GALLERY EXHIBIT</span>
-                    <span className="text-[#F8F5EE] uppercase">ANANDAPOET</span>
-                  </div>
-                  <div className="h-[1px] bg-white/5" />
-                  <div className="flex justify-between items-center text-[10px] font-mono">
-                    <span className="text-[#F8F5EE]/40 uppercase tracking-widest">ARTWORK TYPE</span>
-                    <span className="text-[#D4AF37] uppercase font-bold">{activePhoto.category} PHOTOGRAPHY</span>
-                  </div>
-                </div>
-
-                {/* Keyboard Controls footer Helper */}
-                <div className="flex items-center justify-between text-[9px] font-mono text-[#F8F5EE]/25 bg-[#050505] p-2 border border-white/5 rounded">
-                  <span>← PREVIOUS PHOTO</span>
-                  <span>ESC TO CLOSE</span>
-                  <span>NEXT PHOTO →</span>
-                </div>
               </div>
-
             </div>
           </motion.div>
         )}

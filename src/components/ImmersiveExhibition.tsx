@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PORTFOLIO_IMAGES } from '../data/portfolioData';
 import { ChevronLeft, ChevronRight, Eye, ShieldAlert, Sliders, Frame, Sparkles } from 'lucide-react';
@@ -13,6 +13,32 @@ export default function ImmersiveExhibition() {
   const [currentWallIndex, setCurrentWallIndex] = useState(0);
   const [spotlightIntensity, setSpotlightIntensity] = useState<number>(80); // 0 to 100%
   const [frameStyle, setFrameStyle] = useState<'baroque' | 'minimalist' | 'canvas'>('baroque');
+
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const diffX = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (diffX > minSwipeDistance) {
+      navigateCollection(1); // Swipe left -> Next
+    } else if (diffX < -minSwipeDistance) {
+      navigateCollection(-1); // Swipe right -> Prev
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
 
   // Filter 10 unique masterpieces for the virtual exhibition walk-through
   const museumCollection = PORTFOLIO_IMAGES.filter(img => img.goldRating).slice(0, 10);
@@ -138,7 +164,12 @@ export default function ImmersiveExhibition() {
           </div>
 
           {/* Immersive Wall Canvas (Center/Right Columns) */}
-          <div className="lg:col-span-9 flex flex-col justify-center items-center space-y-8 relative">
+          <div 
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            className="lg:col-span-9 flex flex-col justify-center items-center space-y-8 relative"
+          >
             
             {/* Spotlight Projection Beam effect */}
             <div 
@@ -153,7 +184,7 @@ export default function ImmersiveExhibition() {
             <div className="absolute bottom-16 inset-x-8 h-1 bg-gradient-to-r from-transparent via-[#D4AF37]/15 to-transparent pointer-events-none" />
 
             {/* The Main Exhibition Picture Frame (with Framer Motion transition) */}
-            <div className="relative flex items-center justify-center min-h-[460px] w-full max-w-xl px-12 py-6">
+            <div className="relative flex items-center justify-center min-h-[460px] w-full max-w-xl px-4 sm:px-12 py-6">
               
               <AnimatePresence mode="wait">
                 <motion.div

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BookOpen, ChevronLeft, ChevronRight, Maximize2, Minimize2, Quote, Sparkles } from 'lucide-react';
 import { LOOKBOOK_PAGES } from '../data/portfolioData';
@@ -11,6 +11,32 @@ import { LOOKBOOK_PAGES } from '../data/portfolioData';
 export default function DigitalLookbook() {
   const [currentPageIndex, setCurrentPageIndex] = useState<number>(0);
   const [isFullscreenReading, setIsFullscreenReading] = useState<boolean>(false);
+
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const diffX = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (diffX > minSwipeDistance) {
+      handleNextPage(); // Swipe left -> Next
+    } else if (diffX < -minSwipeDistance) {
+      handlePrevPage(); // Swipe right -> Prev
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
 
   const activePage = LOOKBOOK_PAGES[currentPageIndex];
 
@@ -54,7 +80,7 @@ export default function DigitalLookbook() {
               )}
             </div>
             
-            <div className="relative group overflow-hidden border border-white/5 shadow-lg max-h-[360px] rounded">
+            <div className="relative group overflow-hidden border border-white/5 shadow-lg h-[260px] sm:h-[320px] md:h-[360px] rounded">
               <img
                 src={activePage.imageUrl}
                 alt={activePage.title}
@@ -68,7 +94,7 @@ export default function DigitalLookbook() {
       case 'split':
         return (
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center h-full">
-            <div className="md:col-span-7 relative group overflow-hidden border border-white/5 shadow-lg max-h-[360px] rounded">
+            <div className="md:col-span-7 relative group overflow-hidden border border-white/5 shadow-lg h-[260px] sm:h-[320px] md:h-[360px] rounded">
               <img
                 src={activePage.imageUrl}
                 alt={activePage.title}
@@ -115,7 +141,7 @@ export default function DigitalLookbook() {
               )}
             </div>
 
-            <div className="md:col-span-7 relative group overflow-hidden border border-white/5 shadow-2xl max-h-[360px] rounded">
+            <div className="md:col-span-7 relative group overflow-hidden border border-white/5 shadow-2xl h-[260px] sm:h-[320px] md:h-[360px] rounded">
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/0 to-transparent p-4 z-10" />
               <img
                 src={activePage.imageUrl}
@@ -156,7 +182,12 @@ export default function DigitalLookbook() {
   };
 
   const LookbookContent = () => (
-    <div className="relative bg-[#050505] border border-[#D4AF37]/30 shadow-2xl p-6 sm:p-12 min-h-[460px] select-none rounded flex flex-col justify-between">
+    <div 
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      className="relative bg-[#050505] border border-[#D4AF37]/30 shadow-2xl p-6 sm:p-12 min-h-[460px] select-none rounded flex flex-col justify-between"
+    >
       
       {/* Vintage paper page fold shadow overlay */}
       <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-black/60 shadow-[0_0_12px_rgba(0,0,0,0.85)] z-20 hidden md:block pointer-events-none" />

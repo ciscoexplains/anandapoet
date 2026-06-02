@@ -210,7 +210,7 @@ export default function BookingForm() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="relative w-full overflow-hidden group border border-[#D4AF37] bg-[#7A0000] hover:bg-[#7A0000]/90 text-sm font-mono tracking-[0.35em] text-white py-4.5 rounded transition-all duration-300 shadow-xl"
+                    className="relative w-full overflow-hidden group border border-[#D4AF37] bg-[#7A0000] hover:bg-[#7A0000]/90 text-sm font-mono tracking-[0.35em] text-white py-4 rounded transition-all duration-300 shadow-xl"
                   >
                     {/* Animated side gold slide */}
                     <span className="absolute inset-x-0 bottom-0 h-1 bg-[#D4AF37] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out z-10" />
@@ -218,7 +218,7 @@ export default function BookingForm() {
                     <span className="relative z-20 flex items-center justify-center gap-3">
                       {isSubmitting ? (
                         <span className="flex items-center gap-2 uppercase">
-                          <span className="animate-spin h-4.5 w-4.5 rounded-full border-2 border-white border-t-transparent" />
+                          <span className="animate-spin h-4 w-4 rounded-full border-2 border-white border-t-transparent" />
                           VERIFYING INTEGRITY...
                         </span>
                       ) : (

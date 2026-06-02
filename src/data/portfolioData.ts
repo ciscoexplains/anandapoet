@@ -191,6 +191,8 @@ const generatePortfolioImages = (): PortfolioImage[] => {
   return BASE_LOCAL_PHOTOS.map((basePhoto, index) => {
     const category = mapTagToCategory(basePhoto.tag);
     const i = index + 1;
+    // Prepend BASE_URL to correctly resolve the assets path when deployed to GitHub Pages
+    const imageUrl = `${import.meta.env.BASE_URL}${basePhoto.path.startsWith('/') ? basePhoto.path.slice(1) : basePhoto.path}`;
     return {
       id: `photo-${i}`,
       title: basePhoto.title,
@@ -199,7 +201,7 @@ const generatePortfolioImages = (): PortfolioImage[] => {
       project: 'Private Gallery Exhibition',
       category,
       description: basePhoto.description,
-      imageUrl: basePhoto.path,
+      imageUrl,
       aspectRatio: basePhoto.aspect,
       goldRating: basePhoto.gold
     };
@@ -214,7 +216,7 @@ export const HIGH_FASHION_BANNER_PHOTOS = [
   '/assets/DD109167-DF1F-4B4D-B4D9-F046F807C319.jpg',
   '/assets/1409E9C5-E6DA-4427-B796-F1B79B4280B6.jpg',
   '/assets/IMG_8935.jpg',
-];
+].map(path => `${import.meta.env.BASE_URL}${path.startsWith('/') ? path.slice(1) : path}`);
 
 export const CAMPAIGNS: any[] = [];
 export const LOOKBOOK_PAGES: any[] = [];

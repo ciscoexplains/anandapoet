@@ -16,28 +16,28 @@ export default function SocialHub() {
       id: 'ig-1',
       likes: '14.2K',
       comments: '342',
-      imageUrl: '/assets/F1D10215-2A3A-4093-A386-2958CA6E3E95.JPG',
+      imageUrl: `${import.meta.env.BASE_URL}assets/F1D10215-2A3A-4093-A386-2958CA6E3E95.JPG`,
       tag: '@anandapoet Milan Fashion Week openings'
     },
     {
       id: 'ig-2',
       likes: '8.9K',
       comments: '110',
-      imageUrl: '/assets/IMG_3392.JPG',
+      imageUrl: `${import.meta.env.BASE_URL}assets/IMG_3392.JPG`,
       tag: 'Studio chiaroscuro study with Elena Rostova'
     },
     {
       id: 'ig-3',
       likes: '22.1K',
       comments: '580',
-      imageUrl: '/assets/53A15401-71F6-4139-B030-8ABBF64BB7DA.jpg',
+      imageUrl: `${import.meta.env.BASE_URL}assets/53A15401-71F6-4139-B030-8ABBF64BB7DA.jpg`,
       tag: 'Exclusive Golden Weave campaigns for Balmain Paris'
     },
     {
       id: 'ig-4',
       likes: '11.8K',
       comments: '202',
-      imageUrl: '/assets/IMG_8935.jpg',
+      imageUrl: `${import.meta.env.BASE_URL}assets/IMG_8935.jpg`,
       tag: 'Backstage details, bespoke Tom Ford suits'
     }
   ];
@@ -143,7 +143,7 @@ export default function SocialHub() {
               {/* Documentary Card Link */}
               <div className="relative border border-white/5 bg-[#111111] group rounded overflow-hidden cursor-pointer">
                 <img
-                  src="/assets/0b641165-ba33-43c3-9952-01652d0dd2ba.jpg"
+                  src={`${import.meta.env.BASE_URL}assets/0b641165-ba33-43c3-9952-01652d0dd2ba.jpg`}
                   alt="YouTube Documentaries"
                   referrerPolicy="no-referrer"
                   className="w-full h-44 object-cover filter grayscale contrast-125 brightness-50 group-hover:brightness-40 group-hover:scale-102 transition-all duration-500"

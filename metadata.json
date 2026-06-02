@@ -1,0 +1,8 @@
+{
+  "name": "ANANDAPOET Portfolio",
+  "description": "Ultra-premium personal portfolio website for international fashion model and artist ANANDAPOET.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

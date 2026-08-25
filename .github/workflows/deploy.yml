@@ -1,9 +1,8 @@
-name: Deploy to GitHub Pages
+name: Deploy static content to Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main", "master"]
   workflow_dispatch:
 
 permissions:
@@ -13,7 +12,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -24,11 +23,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Node
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+          cache: 'npm'
       - name: Install dependencies
         run: npm ci
       - name: Build
